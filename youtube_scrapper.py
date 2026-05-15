@@ -129,7 +129,7 @@ class YoutubeScrapper:
 
         return videos
 
-    def get_channel_videos(self, channel_target):
+    def get_channel_videos(self, channel_target, limit=20):
         channel_url = self.normalize_channel_target(channel_target)
 
         # Configure options to only extract info without downloading.
@@ -137,6 +137,11 @@ class YoutubeScrapper:
             'extract_flat': True,
             'force_generic_extractor': False,
         })
+
+        if limit is not None:
+            if limit < 1:
+                raise ValueError('limit must be greater than 0')
+            ydl_opts['playlistend'] = limit
 
         with yt_dlp.YoutubeDL(cast(Any, ydl_opts)) as ydl:
             result = cast(dict[str, Any], ydl.extract_info(channel_url, download=False))
@@ -207,6 +212,12 @@ def build_parser():
         help='YouTube channel URL or handle.',
     )
     channel_parser.add_argument(
+        '--limit',
+        type=int,
+        default=20,
+        help='Limit the number of channel videos returned.',
+    )
+    channel_parser.add_argument(
         '--raw',
         action='store_true',
         help='Print full JSON entries payload instead of compact JSON output.'
@@ -252,7 +263,7 @@ def main(argv=None):
 
     if args.command == 'channel':
         try:
-            videos = scrapper.get_channel_videos(args.channel_target)
+            videos = scrapper.get_channel_videos(args.channel_target, limit=args.limit)
 
             if args.raw:
                 print(json.dumps([video.to_dict() for video in videos], ensure_ascii=False, indent=2))

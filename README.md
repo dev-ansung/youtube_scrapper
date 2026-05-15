@@ -19,82 +19,84 @@ uv tool install git+https://github.com/dev-ansung/youtube_scrapper
 ### Single Use (No Installation)
 
 ```bash
-uvx --from git+https://github.com/dev-ansung/youtube_scrapper youtube-scrapper [COMMAND]
+uvx --from git+https://github.com/dev-ansung/youtube_scrapper youtube-scrapper channel <channel_url_or_handle>
+```
+
+```bash
+uvx --from git+https://github.com/dev-ansung/youtube_scrapper youtube-scrapper transcript <video_url_or_id>
+```
+
+```bash
+uvx --from git+https://github.com/dev-ansung/youtube_scrapper youtube-scrapper search <search_query>
 ```
 
 ## Usage
 
-### Get all videos from a channel
+### uv run youtube-scrapper --help
 
 ```bash
-youtube-scrapper channel "https://www.youtube.com/@firebase"
+usage: youtube-scrapper [-h] [-v] {channel,transcript,search} ...
+
+Extract YouTube channel videos as JSON.
+
+positional arguments:
+  {channel,transcript,search}
+    channel             List videos from a YouTube channel as JSON.
+    transcript          Print a video transcript as plain text.
+    search              Search YouTube videos by query and return results as
+                        JSON.
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Show yt-dlp extraction output.
+
 ```
 
-Sample output:
-```json
-[
-	{
-		"title": "How to Use Firebase with Flutter",
-		"duration": 623.0,
-		"id": "AbCdEf12345",
-		"url": "https://www.youtube.com/watch?v=AbCdEf12345"
-	},
-	{
-		"title": "Firebase Studio Overview",
-		"duration": 512.0,
-		"id": "XyZ98765432",
-		"url": "https://www.youtube.com/watch?v=XyZ98765432"
-	}
-]
-```
+### uv run youtube-scrapper channel --help
 
-### Search videos
-
-```bash
-youtube-scrapper search "firebase auth"
-```
-
-Sample output:
-```json
-[
-	{
-		"title": "Firebase Authentication in 10 Minutes",
-		"duration": 601.0,
-		"id": "Qwerty12345",
-		"url": "https://www.youtube.com/watch?v=Qwerty12345"
-	}
-]
-```
-
-### Get transcript from a video
-
-```bash
-youtube-scrapper transcript "https://www.youtube.com/watch?v=7xWaijDmKDY"
-```
-
-Sample output:
 ```text
-Welcome back.
-In this video, we are going to build authentication with Firebase.
-First, create your project and enable sign-in providers.
-Then connect your app using the Firebase SDK.
+usage: youtube-scrapper channel [-h] [--limit LIMIT] [--raw] channel_target
+
+positional arguments:
+  channel_target  YouTube channel URL or handle.
+
+options:
+  -h, --help      show this help message and exit
+  --limit LIMIT   Limit the number of channel videos returned.
+  --raw           Print full JSON entries payload instead of compact JSON
+                  output.Default fields in compact output: title, duration,
+                  id, url.
+
 ```
 
-### Get transcript as raw VTT
+### uv run youtube-scrapper search --help
 
 ```bash
-youtube-scrapper transcript --raw "https://www.youtube.com/watch?v=7xWaijDmKDY"
+usage: youtube-scrapper search [-h] [--raw] search_query [search_query ...]
+
+positional arguments:
+  search_query  Search query text.
+
+options:
+  -h, --help    show this help message and exit
+  --raw         Print full JSON entries payload instead of compact JSON
+                output.
+
 ```
 
-Sample output:
-```text
-WEBVTT
+### uv run youtube-scrapper transcript --help
 
-00:00:00.000 --> 00:00:02.200
-Welcome back.
+```bash
+usage: youtube-scrapper transcript [-h] [--raw] video_target
 
-00:00:02.200 --> 00:00:06.000
-In this video, we are going to build authentication with Firebase.
+positional arguments:
+  video_target  YouTube video URL or video id.
+
+options:
+  -h, --help    show this help message and exit
+  --raw         Print raw VTT subtitle content instead of cleaned transcript
+                text.
+
 ```
 
 ## License
