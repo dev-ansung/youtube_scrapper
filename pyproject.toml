@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "youtube_scrapper"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "webvtt-py>=0.5.1",
+    "yt-dlp>=2026.3.17",
+]
+
+[project.scripts]
+youtube-scrapper = "youtube_scrapper:main"
+
+[tool.setuptools]
+py-modules = ["youtube_scrapper"]
